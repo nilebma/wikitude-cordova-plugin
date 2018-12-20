@@ -680,11 +680,11 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
         float accuracy = [[command.arguments objectAtIndex:3] floatValue];
 
 
-        if (!self.isUsingInjectedLocation)
-        {
+        // if (!self.isUsingInjectedLocation)
+        // {
             [self.arViewController.architectView setUseInjectedLocation:YES];
             self.isUsingInjectedLocation = YES;
-        }
+        // }
 
         [self.arViewController.architectView injectLocationWithLatitude:latitude longitude:longitude altitude:altitude accuracy:accuracy];
 
