@@ -92,11 +92,11 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
     [self.architectView setShouldRotate:YES toInterfaceOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
 
 
-    UIScreenEdgePanGestureRecognizer *swipeBackRecognizer = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(didSwipeBack:)];
-    swipeBackRecognizer.edges = UIRectEdgeLeft;
-    swipeBackRecognizer.delegate = self;
+    // UIScreenEdgePanGestureRecognizer *swipeBackRecognizer = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(didSwipeBack:)];
+    // swipeBackRecognizer.edges = UIRectEdgeLeft;
+    // swipeBackRecognizer.delegate = self;
     
-    [self.view addGestureRecognizer:swipeBackRecognizer];
+    // [self.view addGestureRecognizer:swipeBackRecognizer];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -269,11 +269,11 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
 
 - (void)didSwipeBack:(UISwipeGestureRecognizer *)recognizer
 {
-    if (self.architectDelegate) {
-        if ([self.architectDelegate respondsToSelector:@selector(architectViewControllerWillDisappear:)]) {
-            [self.architectDelegate architectViewControllerWillDisappear:self];
-        }
-    }
+    // if (self.architectDelegate) {
+    //     if ([self.architectDelegate respondsToSelector:@selector(architectViewControllerWillDisappear:)]) {
+    //         [self.architectDelegate architectViewControllerWillDisappear:self];
+    //     }
+    // }
 }
 
 @end
