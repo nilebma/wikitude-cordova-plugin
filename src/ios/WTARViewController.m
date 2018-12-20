@@ -123,6 +123,18 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
     }
 
     [self.architectView setShouldRotate:YES toInterfaceOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
+
+    // We allow html inline media playback in the AR view
+    for (UIView* subview in self.architectView.subviews) {
+
+        if ([subview isKindOfClass: UIWebView.class]) {
+
+            UIWebView* webview = (UIWebView*) subview;
+
+            webview.allowsInlineMediaPlayback = true;
+        }
+    }
+
 }
 
 - (void)viewDidDisappear:(BOOL)animated
