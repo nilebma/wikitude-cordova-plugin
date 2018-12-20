@@ -222,25 +222,25 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectJavaScript
         this.action = action;
 
 		/* hide architect-view -> destroy and remove from activity */
-        if ( WikitudePlugin.ACTION_CLOSE.equals( action ) ) {
-            if ( this.architectView != null ) {
-                this.cordova.getActivity().runOnUiThread( new Runnable() {
+        // if ( WikitudePlugin.ACTION_CLOSE.equals( action ) ) {
+        //     if ( this.architectView != null ) {
+        //         this.cordova.getActivity().runOnUiThread( new Runnable() {
 
-                    @Override
-                    public void run() {
-                        if (WikitudePlugin.this.locationProvider != null) {
-                            WikitudePlugin.this.locationProvider.onPause();
-                        }
-                        removeArchitectView();
-                    }
-                } );
-                callContext.success( action + ": architectView is present" );
-            }
-            else {
-                callContext.error( action + ": architectView is not present" );
-            }
-            return true;
-        }
+        //             @Override
+        //             public void run() {
+        //                 if (WikitudePlugin.this.locationProvider != null) {
+        //                     WikitudePlugin.this.locationProvider.onPause();
+        //                 }
+        //                 removeArchitectView();
+        //             }
+        //         } );
+        //         callContext.success( action + ": architectView is present" );
+        //     }
+        //     else {
+        //         callContext.error( action + ": architectView is not present" );
+        //     }
+        //     return true;
+        // }
 
 		/* return success only if view is opened (no matter if visible or not) */
         if ( WikitudePlugin.ACTION_STATE_ISOPEN.equals( action ) ) {
