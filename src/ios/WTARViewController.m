@@ -124,6 +124,28 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
 
     [self.architectView setShouldRotate:YES toInterfaceOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
 
+     // LIMITING AR VIEW TO SAFE AREA IN IPHONE X
+    UIView * myView = self.architectView;
+
+    myView.translatesAutoresizingMaskIntoConstraints = NO;
+
+    if (@available(iOS 11, *)) {
+        UILayoutGuide * guide = self.view.safeAreaLayoutGuide;
+        [myView.leadingAnchor constraintEqualToAnchor:guide.leadingAnchor].active = YES;
+        [myView.trailingAnchor constraintEqualToAnchor:guide.trailingAnchor].active = YES;
+        [myView.topAnchor constraintEqualToAnchor:guide.topAnchor].active = YES;
+        [myView.bottomAnchor constraintEqualToAnchor:guide.bottomAnchor].active = YES;
+    } else {
+        UILayoutGuide *margins = self.view.layoutMarginsGuide;
+        [myView.leadingAnchor constraintEqualToAnchor:margins.leadingAnchor].active = YES;
+        [myView.trailingAnchor constraintEqualToAnchor:margins.trailingAnchor].active = YES;
+        [myView.topAnchor constraintEqualToAnchor:self.topLayoutGuide.bottomAnchor].active = YES;
+        [myView.bottomAnchor constraintEqualToAnchor:self.bottomLayoutGuide.topAnchor].active = YES;
+    }
+
+    // Refresh myView and/or main view
+    [self.view layoutIfNeeded];
+
     // We allow html inline media playback in the AR view
     for (UIView* subview in self.architectView.subviews) {
 
