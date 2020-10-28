@@ -243,16 +243,12 @@
 	 */
 	WikitudePlugin.prototype.setBackButtonCallback = function(onBackButtonCallback)
 	{
-	    if ( cordova.platformId == "android" ) {
-	        var backButton = function(){
-	            this.customBackButtonCallback = onBackButtonCallback();
-	            this.onBackButton();
-	            onBackButtonCallback();
-	        }
-	        cordova.exec(backButton, this.onWikitudeError, "WikitudePlugin", "setBackButtonCallback", []);
-	    } else {
-	        alert('setBackButtonCallback is only available on Android and not on' + cordova.platformId);
-	    }
+		this.customBackButtonCallback = function() {
+			onBackButtonCallback();
+			WikitudePlugin.prototype.close();
+		}
+		cordova.exec(this.customBackButtonCallback, this.onWikitudeError, "WikitudePlugin", "setBackButtonCallback", []);
+
 	}
 
 	/**
