@@ -19,10 +19,7 @@
 #include "CompilerAttributes.hpp"
 
 
-namespace wikitude { namespace sdk {
-
-    namespace impl {
-
+namespace wikitude::sdk {
 
         class CameraFramePlane;
         class WT_EXPORT_API ManagedCameraFrame {
@@ -41,16 +38,23 @@ namespace wikitude { namespace sdk {
             long getId() const;
             std::int64_t getColorTimestamp() const;
             const ColorCameraFrameMetadata& getColorMetadata() const;
+            
+            std::int64_t getDepthTimestamp() const;
+            const DepthCameraFrameMetadata& getDepthMetadata() const;
 
             const CameraFrame& getCameraFrame(){return _cameraFrame;}
 
             const std::vector<CameraFramePlane>& get();
+            const void* getDepth();
+            const void* getConfidenceDepth();
 
             bool hasPose() const;
             const Matrix4& getPose() const;
 
             void addRequestor();
             const std::vector<CameraFramePlane>& getRequestedData();
+            const void* getRequestedDepthData();
+            const void* getRequestedConfidenceDepthData();
 
             void lockForCopy();
             void copyIfNeeded();
@@ -70,12 +74,12 @@ namespace wikitude { namespace sdk {
             CameraFrame                                         _cameraFrame;
 
             std::shared_ptr<std::vector<CameraFramePlane>>      _safeStorage;
+            std::shared_ptr<unsigned char*>                     _safeDepthStorage;
+            std::shared_ptr<unsigned char*>                     _safeConfidenceDepthStorage;
             std::shared_ptr<std::mutex>                         _safeStorageMutex;
             std::shared_ptr<int>                                _refCount = nullptr;
         };
-    }
-    using impl::ManagedCameraFrame;
-}}
+}
 
 #endif /* ManagedCameraFrame_hpp */
 

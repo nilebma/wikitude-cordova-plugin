@@ -26,7 +26,7 @@
 #include "ImageTrackingPluginModule.hpp"
 #include "ObjectTrackingPluginModule.hpp"
 #include "InstantTrackingPluginModule.hpp"
-#if defined(__APPLE__) || defined(ANDROID)
+#if defined(__APPLE__) || defined(ANDROID) || defined(__linux__)
 #include "OpenGLESRenderingPluginModule.hpp"
 #endif
 #ifdef __APPLE__
@@ -36,14 +36,9 @@
 #include "D3D11RenderingPluginModule.hpp"
 #endif
 
-
-namespace wikitude {
-    namespace sdk {
-        namespace impl {
-
+namespace wikitude::sdk {
 
             class CameraFrame;
-            class ManagedCameraFrame;
             class RuntimeParameters;
             class CameraParameters;
             class TrackingParameters;
@@ -51,6 +46,7 @@ namespace wikitude {
             class PluginParameterCollection;
             class DeviceRotationEvent;
             class DeviceOrientationEvent;
+            class ManagedCameraFrame;
 
             enum class WT_EXPORT_API PluginType {
                 Plugin,
@@ -151,7 +147,7 @@ namespace wikitude {
                 CameraFrameInputPluginModule* getCameraFrameInputPluginModule() const;
 
                 DeviceMotionInputPluginModule* getDeviceIMUInpputPluginModule() const;
-#if defined(__APPLE__) || defined(ANDROID)
+#if defined(__APPLE__) || defined(ANDROID) || defined(__linux__)
                 OpenGLESRenderingPluginModule* getOpenGLESRenderingPluginModule() const;
 #endif
 #ifdef __APPLE__
@@ -168,7 +164,7 @@ namespace wikitude {
 
                 void setCameraFrameInputPluginModule(std::unique_ptr<CameraFrameInputPluginModule> cameraFrameInputPluginModule_);
                 void setDeviceMotionInputPluginModule(std::unique_ptr<DeviceMotionInputPluginModule> deviceMotionInputPluginModule_);
-#if defined(__APPLE__) || defined(ANDROID)
+#if defined(__APPLE__) || defined(ANDROID) || defined(__linux__)
                 void setOpenGLESRenderingPluginModule(std::unique_ptr<OpenGLESRenderingPluginModule> openGLESRenderingPluginModule_);
 #endif
 #ifdef __APPLE__
@@ -195,7 +191,7 @@ namespace wikitude {
                 std::unique_ptr<CameraFrameInputPluginModule>   _cameraFrameInputModule;
 
                 std::unique_ptr<DeviceMotionInputPluginModule>  _deviceMotionInputPluginModule;
-#if defined(__APPLE__) || defined(ANDROID)
+#if defined(__APPLE__) || defined(ANDROID) || defined(__linux__)
                 std::unique_ptr<OpenGLESRenderingPluginModule>  _openGlesRenderingModule;
 #endif
 #ifdef __APPLE__
@@ -205,11 +201,6 @@ namespace wikitude {
                 std::unique_ptr<D3D11RenderingPluginModule>     _d3d11RenderingModule;
 #endif
             };
-        }
-        using impl::PluginParameterCollection;
-        using impl::Plugin;
-        using impl::PluginType;
-    }
 }
 
 #endif /* __cplusplus */
