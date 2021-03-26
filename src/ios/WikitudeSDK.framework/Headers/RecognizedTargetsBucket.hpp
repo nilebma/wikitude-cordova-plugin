@@ -18,14 +18,13 @@
 #include "InstantTarget.hpp"
 #include "InitializationPose.hpp"
 #include "Plane.hpp"
+#include "CompilerAttributes.hpp"
 
 
-namespace wikitude { namespace sdk {
+namespace wikitude::sdk {
 
-    namespace impl {
-
-
-        class RecognizedTargetsBucket {
+        class Matrix4;
+        class WT_EXPORT_API RecognizedTargetsBucket {
         public:
             virtual ~RecognizedTargetsBucket() = default;
 
@@ -36,10 +35,9 @@ namespace wikitude { namespace sdk {
             virtual const std::vector<InitializationPose*>& getInitializationPoses() const = 0;
             
             virtual const std::vector<Plane*>& getPlanes() const = 0;
+            virtual const Matrix4& getViewMatrix() const = 0;
         };
-    }
-    using impl::RecognizedTargetsBucket;
-}}
+}
 
 #endif /* __cplusplus */
 

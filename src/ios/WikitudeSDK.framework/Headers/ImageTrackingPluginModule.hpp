@@ -11,35 +11,26 @@
 
 #ifdef __cplusplus
 
+#include "Matrix4.hpp"
+
 #include "State.hpp"
 #include "CompilerAttributes.hpp"
 
 #include "TrackingPluginModule.hpp"
 
 
-namespace wikitude {
-    namespace sdk {
-        namespace impl {
-            class ManagedCameraFrame;
-        }
-        using impl::ManagedCameraFrame;
-    }
-}
+namespace wikitude::sdk {
 
-namespace wikitude { namespace sdk {
-
-    namespace impl {
-
-
+        class ImageTracker;
+        class ManagedCameraFrame;
         class WT_EXPORT_API ImageTrackingPluginModule : public TrackingPluginModule {
         public:
             virtual ~ImageTrackingPluginModule() = default;            
 
-            virtual universal_sdk::ImageState getTrackingState() const = 0;
+            virtual universal_sdk::ImageState getTrackingState(ImageTracker& imageTracker_) const = 0;
+            virtual sdk::Matrix4 getViewMatrix() const = 0;
         };
-    }
-    using impl::ImageTrackingPluginModule;
-}}
+}
 
 #endif /* __cplusplus */
 

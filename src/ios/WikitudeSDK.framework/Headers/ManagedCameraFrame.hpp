@@ -16,15 +16,13 @@
 #include <functional>
 
 #include "CameraFrame.hpp"
+#include "CompilerAttributes.hpp"
 
 
-namespace wikitude { namespace sdk {
-
-    namespace impl {
-
+namespace wikitude::sdk {
 
         class CameraFramePlane;
-        class ManagedCameraFrame {
+        class WT_EXPORT_API ManagedCameraFrame {
         public:
             ManagedCameraFrame(); /* delete me because I can’t be constructed without a sdk::CameraFrame */
 
@@ -32,7 +30,7 @@ namespace wikitude { namespace sdk {
 
             ManagedCameraFrame(ManagedCameraFrame& other_);
 
-            /* dtor impl. not needed as SDK is supposed to call lockForCopy(), copyIfNeeded() and unlockAfterCopy() when the lifetime of the FrameObject ends */
+            /* dtor impl. not needed as the Wikitude SDK is calling lockForCopy(), copyIfNeeded() and unlockAfterCopy() when the lifetime of the FrameObject ends */
             virtual ~ManagedCameraFrame() = default;
 
             ManagedCameraFrame& operator = (ManagedCameraFrame& other_);
@@ -40,14 +38,23 @@ namespace wikitude { namespace sdk {
             long getId() const;
             std::int64_t getColorTimestamp() const;
             const ColorCameraFrameMetadata& getColorMetadata() const;
+            
+            std::int64_t getDepthTimestamp() const;
+            const DepthCameraFrameMetadata& getDepthMetadata() const;
+
+            const CameraFrame& getCameraFrame(){return _cameraFrame;}
 
             const std::vector<CameraFramePlane>& get();
+            const void* getDepth();
+            const void* getConfidenceDepth();
 
             bool hasPose() const;
             const Matrix4& getPose() const;
 
             void addRequestor();
             const std::vector<CameraFramePlane>& getRequestedData();
+            const void* getRequestedDepthData();
+            const void* getRequestedConfidenceDepthData();
 
             void lockForCopy();
             void copyIfNeeded();
@@ -67,12 +74,12 @@ namespace wikitude { namespace sdk {
             CameraFrame                                         _cameraFrame;
 
             std::shared_ptr<std::vector<CameraFramePlane>>      _safeStorage;
+            std::shared_ptr<unsigned char*>                     _safeDepthStorage;
+            std::shared_ptr<unsigned char*>                     _safeConfidenceDepthStorage;
             std::shared_ptr<std::mutex>                         _safeStorageMutex;
             std::shared_ptr<int>                                _refCount = nullptr;
         };
-    }
-    using impl::ManagedCameraFrame;
-}}
+}
 
 #endif /* ManagedCameraFrame_hpp */
 

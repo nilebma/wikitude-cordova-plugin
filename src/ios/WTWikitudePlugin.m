@@ -29,7 +29,6 @@ NSString * const kWTWikitudePlugin_requiredFeature_ImageTracking    = @"image_tr
 NSString * const kWTWikitudePlugin_requiredFeature_InstantTracking  = @"instant_tracking";
 NSString * const kWTWikitudePlugin_requiredFeature_ObjectTracking   = @"object_tracking";
 NSString * const kWTWikitudePlugin_requiredFeature_PhotoLibraryScreenshotImport  = @"photo_library_screenshot_import";
-NSString * const kWTWikitudePlugin_requiredFeature_2DTracking       = @"2d_tracking"; /* deprecated in Wikitude SDK version 6.0.0 */
 
 NSString * const kWTWikitudePlugin_ArgumentCaptureDeviceResolution  = @"camera_resolution";
 NSString * const kWTWikitudePlugin_captureDeviceResolution_SD_640x480 = @"sd_640x480";
@@ -80,6 +79,7 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
 @property (nonatomic, strong) NSString                              *accessRequestCallbackId;
 @property (nonatomic, strong) NSString                              *deviceSensorsNeedCalibrationCallbackId;
 @property (nonatomic, strong) NSString                              *deviceSensorsFinishedCalibrationCallbackId;
+@property (nonatomic, strong) NSString                              *onBackButtonCallbackId;
 
 @property (nonatomic, assign) BOOL                                  isUsingInjectedLocation;
 @property (nonatomic, assign) BOOL                                  isDeviceSupported;
@@ -226,7 +226,7 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
             {
                 requiredFeatures |= WTFeature_Geo;
             }
-            else if ( [featureString isEqualToString:kWTWikitudePlugin_requiredFeature_ImageTracking] || [featureString isEqualToString:kWTWikitudePlugin_requiredFeature_2DTracking] )
+            else if ( [featureString isEqualToString:kWTWikitudePlugin_requiredFeature_ImageTracking] )
             {
                 requiredFeatures |= WTFeature_ImageTracking;
             }
@@ -452,6 +452,7 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
                 
                 [self.arViewController.architectView setLicenseKey:sdkKey];
 
+                self.arViewController.modalPresentationStyle = UIModalPresentationFullScreen;
                 self.arViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
                 self.arViewController.architectDelegate = self;
             }
@@ -607,6 +608,18 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
+- (void)setBackButtonCallback:(CDVInvokedUrlCommand *)command
+{
+    CDVPluginResult* pluginResult = nil;
+
+    self.onBackButtonCallbackId = command.callbackId;
+
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
+    [pluginResult setKeepCallbackAsBool:YES];
+
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
 - (void)onPause:(CDVInvokedUrlCommand *)command
 {
 
@@ -753,6 +766,24 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
     [pluginResult setKeepCallbackAsBool:YES];
     
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void)showAlert:(CDVInvokedUrlCommand *)command
+{
+    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
+
+    NSString* message = [NSString stringWithFormat:@"%@", command.arguments.firstObject];
+    UIAlertController * alert = [UIAlertController alertControllerWithTitle:nil
+                                                                    message:message
+                                                             preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction* okButton = [UIAlertAction actionWithTitle:@"OK"
+                                                       style:UIAlertActionStyleDefault
+                                                     handler:nil];
+    [alert addAction:okButton];
+
+    [self.arViewController presentViewController:alert animated:YES completion:nil];
+
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
@@ -941,7 +972,11 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
 
 - (void)architectViewControllerWillDisappear:(WTArchitectViewController *)architectViewController
 {
-    [self close:nil];
+    CDVPluginResult* pluginResult = nil;
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [pluginResult setKeepCallbackAsBool:YES];
+
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:self.onBackButtonCallbackId];
 }
 
 
